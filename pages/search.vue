@@ -14,7 +14,7 @@
             optionLabel="label"
             placeholder="Select an option"
             class="w-full"
-            @change="search"
+            @change="searchStart"
           />
         </div>
       </div>
@@ -88,8 +88,9 @@ const getDropdownOptions = async () => {
     const { $apiFetch } = useNuxtApp();
     const response = await $apiFetch('/api/any_data/type');
     console.log('Dropdown options response:', response);
+    dropdownOptions.value.push({ label: 'anydata', value: "anydata" });
     for (const item of response) {
-      dropdownOptions.value.push({ label: item, value: item });
+      dropdownOptions.value.push({ label: item, value: "anydata_" + item });
     }
 
   } catch (e) {
