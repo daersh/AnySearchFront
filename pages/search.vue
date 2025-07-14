@@ -20,8 +20,8 @@
       </div>
 
       <div class="p-inputgroup mb-5">
-        <InputText placeholder="Enter your search query" class="w-full" v-model="searchQuery" @keyup.enter="search" />
-        <Button icon="pi pi-search" class="p-button-primary" @click="search" />
+        <InputText placeholder="Enter your search query" class="w-full" v-model="searchQuery" @keyup.enter="searchStart" />
+        <Button icon="pi pi-search" class="p-button-primary" @click="searchStart" />
       </div>
 
       <div v-if="results.length" class="">
@@ -36,6 +36,12 @@
             </div>
           </div>
         </div>
+
+        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+          <Button label="Prev" icon="pi pi-chevron-left" class="p-button-text" @click="prevPage" :disabled="currentPage==0" />
+          <Button label="Next" icon="pi pi-chevron-right" class="p-button-text" @click="nextPage" :disabled="isEnd" />
+        </div>
+
       </div>
       <div v-if="error" class="text-red-500 text-center mt-5">
         <i class="pi pi-exclamation-triangle text-2xl mb-2"></i>
@@ -54,6 +60,28 @@ const error = ref(null);
 
 const selectedOption = ref(null);
 const dropdownOptions = ref([]);
+const currentPage= ref(0);
+const isEnd = ref(false);
+const totalCount = ref(0);
+
+const prevPage = () => {
+  if (currentPage.value > 0) {
+    currentPage.value--;
+    search();
+  }
+};
+
+const nextPage = () => {
+  if (!isEnd.value) {
+    currentPage.value++;
+    search();
+  }
+};
+const searchStart = () => {
+  currentPage.value = 0;
+  isEnd.value = false;
+  search();
+}
 
 const getDropdownOptions = async () => {
   try {
@@ -71,6 +99,7 @@ const getDropdownOptions = async () => {
 };
 getDropdownOptions();
 
+
 const search = async () => {
   if (!searchQuery.value) {
     return;
@@ -82,12 +111,14 @@ const search = async () => {
       params: {
         request: searchQuery.value,
         type: selectedOption.value.value,
-        page: 0,
-        size: 2,
+        page: currentPage.value,
+        size: 3,
       },
     });
     results.value = [];
-    for (const item of response) {
+    totalCount.value = response.count;
+    isEnd.value = response.count <= (currentPage.value + 1) * 3
+    for (const item of response.docs) {
       results.value.push({
         id: item.id,
         title: item.title,
