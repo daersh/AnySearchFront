@@ -12,13 +12,12 @@
       </div>
 
       <DataTable :value="anyDataList" responsiveLayout="scroll">
-        <Column field="id" header="ID"></Column>
         <Column field="type" header="Type"></Column>
         <Column field="title" header="Title"></Column>
         <Column field="description" header="Description"></Column>
         <Column field="isActive" header="Active">
           <template #body="slotProps">
-            <i :class="slotProps.data.isActive ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+            <i :class="slotProps.data.isActive ? ' pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
           </template>
         </Column>
         <Column header="Actions">
@@ -62,7 +61,7 @@
         </template>
       </Dialog>
 
-            <Dialog v-model:visible="showEditDialog" header="Edit AnyData" :modal="true" class="p-fluid">
+      <Dialog v-model:visible="showEditDialog" header="Edit AnyData" :modal="true" class="p-fluid">
         <div class="field">
           <label for="editType">Type</label>
           <InputText id="editType" v-model="editingAnyData.type" required autofocus />
@@ -109,8 +108,6 @@ import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#app';
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
-
-// PrimeVue Components
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';

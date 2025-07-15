@@ -23,8 +23,11 @@
         <InputText placeholder="Enter your search query" class="w-full" v-model="searchQuery" @keyup.enter="searchStart" />
         <Button icon="pi pi-search" class="p-button-primary" @click="searchStart" />
       </div>
-
+      
       <div v-if="results.length" class="">
+        <div>
+          totalCount: {{ totalCount }}
+        </div>
         <div v-for="result in results" :key="result.id" class="">
           <div class="surface-100 p-3 border-round shadow-1 h-full" style="margin-bottom: 5px;">
             <div class="text-900 font-medium text-xl mb-2">{{ result.title }}</div>
@@ -36,9 +39,10 @@
             </div>
           </div>
         </div>
-
+        
         <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
           <Button label="Prev" icon="pi pi-chevron-left" class="p-button-text" @click="prevPage" :disabled="currentPage==0" />
+          <p class="p-button-text">{{ currentPage+1 }}</p>
           <Button label="Next" icon="pi pi-chevron-right" class="p-button-text" @click="nextPage" :disabled="isEnd" />
         </div>
 
@@ -102,9 +106,7 @@ getDropdownOptions();
 
 
 const search = async () => {
-  if (!searchQuery.value) {
-    return;
-  }
+  
   try {
     const { $apiFetch } = useNuxtApp();
     console.log('Search query:', searchQuery.value, 'Selected option:', selectedOption.value.value);
