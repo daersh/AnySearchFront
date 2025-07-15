@@ -8,7 +8,7 @@
       </div>
       <div>
         <div class="mb-4">
-          <Dropdown
+          <Select
             v-model="selectedOption"
             :options="dropdownOptions"
             optionLabel="label"
