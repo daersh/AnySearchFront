@@ -8,7 +8,6 @@ export const useAuth = () => {
     if (token.value) {
       try {
         const decoded = jwtDecode(token.value);
-        console.log("Decoded token:", decoded);
         return decoded;
       } catch (e) {
         console.error("Error decoding token:", e);
@@ -20,7 +19,6 @@ export const useAuth = () => {
 
   const isAdmin = () => {
     const user = getUser();
-    console.log("Checking if user is admin:", user);
     return user && user.user_role === 'ROLE_ADMIN';
   };
 

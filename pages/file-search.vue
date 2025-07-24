@@ -2,36 +2,15 @@
   <div class="p-8">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold">AnySearch</h1>
-        <p class="text-lg text-color-secondary">Find what you need, faster.</p>
+        <h1 class="text-4xl font-bold">File Search</h1>
+        <p class="text-lg text-color-secondary">Search and discover files.</p>
       </div>
 
       <div class="p-card p-4 mb-5">
-        <div class="grid formgrid p-fluid">
-          <div class="field col-12 md:col-4">
-            <Select
-              v-model="selectedOption"
-              :options="dropdownOptions"
-              optionLabel="label"
-              placeholder="Select a category"
-              class="w-full"
-              @change="searchStart"
-            />
-          </div>
-          <div class="field col-12 md:col-8" style="position: relative;">
-            <div class="p-inputgroup">
-              <InputText placeholder="Enter your search query" v-model="searchQuery" @keyup.enter="searchStart"/>
-              <Button icon="pi pi-times" class="p-button-secondary" @click="clearSearchQuery" v-if="searchQuery" />
-              <Button icon="pi pi-search" class="p-button-primary" @click="searchStart" />
-            </div>
-            <div v-if="autoKeyWords.length" class="suggestions-list">
-              <ul>
-                <li v-for="keyword in autoKeyWords" :key="keyword" @click="selectSuggestion(keyword)">
-                  {{ keyword }}
-                </li>
-              </ul>
-            </div>
-          </div>
+        <div class="p-inputgroup">
+          <InputText placeholder="Enter your file search query" v-model="searchQuery" @keyup.enter="searchStart"/>
+          <Button icon="pi pi-times" class="p-button-secondary" @click="clearSearchQuery" v-if="searchQuery" />
+          <Button icon="pi pi-search" class="p-button-primary" @click="searchStart" />
         </div>
       </div>
 
@@ -44,7 +23,13 @@
             <div class="p-card p-4">
               <div class="text-xl font-semibold mb-2">{{ result.title }}</div>
               <p class="text-color-secondary mb-3">
-                {{ result.description }}
+                <template v-if="result.description && result.description.length > 200">
+                  {{ result.showFullDescription ? result.description : result.description.substring(0, 200) + '...' }}
+                  <Button :label="result.showFullDescription ? 'Read Less' : 'Read More'" class="p-button-link p-0" @click="result.showFullDescription = !result.showFullDescription" />
+                </template>
+                <template v-else>
+                  {{ result.description }}
+                </template>
               </p>
               <div v-if="result.additionalFields" class="text-sm">
                 <div v-for="(value, key) in result.additionalFields" :key="key">
@@ -91,12 +76,9 @@ const results = ref([]);
 const error = ref(null);
 const searchPerformed = ref(false); // Track if a search has been performed
 
-const selectedOption = ref(null);
-const dropdownOptions = ref([]);
 const currentPage= ref(0);
 const isEnd = ref(false);
 const totalCount = ref(0);
-let blockAutocomplete = false;
 
 onMounted(() => {
   if (route.query.query) {
@@ -112,42 +94,6 @@ const prevPage = () => {
   }
 };
 
-const autoKeyWords = ref([]);
-
-const autoComplete = async () => {
-  const { $apiFetch } = useNuxtApp();
-  const response = await $apiFetch('/api/search/auto_completion', {
-    params: {
-      query: searchQuery.value,
-      type: selectedOption.value ? selectedOption.value.value : 'anydata'
-    }
-  });
-  autoKeyWords.value = response;
-};
-
-const debouncedFetchSuggestions = debounce(autoComplete, 300);
-
-watch(searchQuery, (newValue) => {
-  if (blockAutocomplete) {
-    blockAutocomplete = false;
-    autoKeyWords.value = [];
-    return;
-  }
-  if (!newValue.trim()) {
-    autoKeyWords.value = [];
-    debouncedFetchSuggestions.cancel();
-    return;
-  }
-  debouncedFetchSuggestions();
-});
-
-const selectSuggestion = (suggestion) => {
-  debouncedFetchSuggestions.cancel();
-  blockAutocomplete = true;
-  searchQuery.value = suggestion;
-  searchStart();
-};
-
 const nextPage = () => {
   if (!isEnd.value) {
     currentPage.value++;
@@ -156,8 +102,6 @@ const nextPage = () => {
 };
 
 const searchStart = () => {
-  autoKeyWords.value = [];
-  debouncedFetchSuggestions.cancel();
   currentPage.value = 0;
   isEnd.value = false;
   searchPerformed.value = true; // Set search performed flag
@@ -169,26 +113,7 @@ const clearSearchQuery = () => {
   results.value = [];
   error.value = null;
   searchPerformed.value = false; // Reset search performed flag
-  autoKeyWords.value = [];
-  debouncedFetchSuggestions.cancel();
 };
-
-const getDropdownOptions = async () => {
-  try {
-    const { $apiFetch } = useNuxtApp();
-    const response = await $apiFetch('/api/any_data/type');
-    dropdownOptions.value.push({ label: 'anydata', value: "anydata" });
-    for (const item of response) {
-      dropdownOptions.value.push({ label: item, value: "anydata_" + item });
-    }
-    // Set default selected option to 'anydata'
-    selectedOption.value = dropdownOptions.value.find(option => option.value === 'anydata');
-    search();
-  } catch (e) {
-    console.error('Failed to fetch dropdown options:', e);
-  }
-};
-getDropdownOptions();
 
 const search = async () => {
   try {
@@ -196,7 +121,7 @@ const search = async () => {
     const response = await $apiFetch('/api/search/analyzer2', {
       params: {
         request: searchQuery.value,
-        type: selectedOption.value.value,
+        type: 'anydata_file', // Always search for files
         page: currentPage.value,
         size: 3,
       },

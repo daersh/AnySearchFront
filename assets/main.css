@@ -88,7 +88,7 @@ a:hover {
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-    background: #2a2a2a; /* Slightly darker than card for header */
+    background: var(--surface-card); /* Use variable */
     color: var(--text-color);
     border: 1px solid var(--surface-border);
     border-width: 0 0 1px 0;
@@ -111,7 +111,7 @@ a:hover {
 
 /* Input fields styling */
 .p-inputtext, .p-password, .p-dropdown, .p-inputtextarea {
-    background: #2a2a2a;
+    background: var(--surface-card); /* Use variable */
     color: var(--text-color);
     border: 1px solid var(--surface-border);
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;

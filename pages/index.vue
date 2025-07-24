@@ -71,6 +71,18 @@
         </Card>
       </div>
 
+      <div class="col-12 md:col-6 lg:col-4">
+        <Card class="dashboard-card" @click="navigateTo('/file-search')">
+          <template #title>
+            <i class="pi pi-file text-primary text-3xl mb-3"></i>
+            <h3>File Search</h3>
+          </template>
+          <template #content>
+            <p class="text-color-secondary">Search specifically for files and documents.</p>
+          </template>
+        </Card>
+      </div>
+
       <!-- Add more cards for other features as needed -->
     </div>
   </div>
@@ -124,20 +136,12 @@ const navigateTo = (path) => {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.dashboard-card .p-card-title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
+.dashboard-card h3 {
+  color: var(--text-color);
 }
 
-.dashboard-card .p-card-title i {
-  margin-bottom: 0.5rem;
-}
-
-.dashboard-card .p-card-content {
-  flex-grow: 1;
+.dashboard-card p {
+  color: var(--text-color-secondary);
 }
 
 /* Responsive adjustments for input group */

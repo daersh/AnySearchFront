@@ -3,14 +3,11 @@ import Menubar from 'primevue/menubar';
 import { ref, computed } from 'vue';
 import { useAuth } from '~/composables/useAuth';
 import { useRoute } from 'vue-router';
-import { useTheme } from '~/composables/useTheme';
 
 const { isAdmin, token } = useAuth();
 const router = useRouter();
 const route = useRoute();
-const { isDark, toggleDark } = useTheme();
 
-console.log("isAdmin:", isAdmin);
 const showMenubar = computed(() => route.path !== '/auth');
 
 const logout = () => {
@@ -29,6 +26,11 @@ const menuItems = computed(() => {
       label: 'Search',
       icon: 'pi pi-search',
       command: () => router.push('/search')
+    },
+    {
+      label: 'File Search',
+      icon: 'pi pi-file',
+      command: () => router.push('/file-search')
     },
     {
       label: 'Profile',
@@ -75,11 +77,7 @@ const menuItems = computed(() => {
 
 <template>
   <div class="min-h-screen flex flex-column">
-    <Menubar :model="menuItems" class="p-menubar-light shadow-2" v-if="showMenubar">
-      <template #end>
-        <Button :icon="isDark ? 'pi pi-sun' : 'pi pi-moon'" class="p-button-rounded p-button-text" @click="toggleDark" />
-      </template>
-    </Menubar>
+    <Menubar :model="menuItems" class="p-menubar-light shadow-2" v-if="showMenubar" />
     <main class="flex-grow-1">
       <slot />
     </main>
@@ -99,7 +97,24 @@ body {
 
 .p-menubar-light {
   background-color: var(--surface-card);
-  color: var(--text-color);
+  color: var(--text-color); /* Ensure default text color */
   border-radius: 0;
+}
+
+/* Ensure menubar item text color follows theme */
+.p-menubar .p-menuitem-link .p-menuitem-text {
+  color: var(--text-color);
+}
+
+.p-menubar .p-menuitem-link:hover .p-menuitem-text {
+  color: var(--primary-color);
+}
+
+.p-menubar .p-submenu-list .p-menuitem-link .p-menuitem-text {
+  color: var(--text-color);
+}
+
+.p-menubar .p-submenu-list .p-menuitem-link:hover .p-menuitem-text {
+  color: var(--primary-color);
 }
 </style>

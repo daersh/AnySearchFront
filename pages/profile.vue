@@ -24,6 +24,18 @@
                     <label for="profile-email">Email</label>
                   </span>
                 </div>
+                <div class="field">
+                  <span class="p-float-label">
+                    <InputText id="profile-userId" v-model="profileForm.userId" disabled />
+                    <label for="profile-userId">User ID</label>
+                  </span>
+                </div>
+                <div class="field">
+                  <span class="p-float-label">
+                    <InputText id="profile-role" v-model="profileForm.role" disabled />
+                    <label for="profile-role">Role</label>
+                  </span>
+                </div>
                 <Button label="Update Profile" type="submit" class="w-full mt-4" :loading="loadingProfile" />
               </form>
             </TabPanel>
@@ -72,7 +84,9 @@ const toast = useToast();
 
 const profileForm = ref({
   nickname: '',
-  email: ''
+  email: '',
+  userId: '',
+  role: ''
 });
 
 const profileErrors = ref({});
@@ -93,6 +107,8 @@ onMounted(() => {
   if (user) {
     profileForm.value.nickname = user.user_nickname || '';
     profileForm.value.email = user.user_email || '';
+    profileForm.value.userId = user.userId || ''; // Assuming user_id from token
+    profileForm.value.role = user.user_role || ''; // Assuming user_role from token
   }
 });
 

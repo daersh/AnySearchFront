@@ -3,8 +3,8 @@
     <div class="mb-4">
       <i class="pi pi-times-circle" style="font-size: 5rem; color: var(--primary-color);"></i>
     </div>
-    <h1 class="text-5xl font-bold mb-3">{{ error.statusCode }} - {{ error.statusMessage || 'An Error Occurred' }}</h1>
-    <p class="text-xl text-color-secondary mb-5">{{ error.message || 'Something went wrong on our end.' }}</p>
+    <h1 class="text-5xl font-bold mb-3">{{ error?.statusCode || 'Error' }} - {{ error?.statusMessage || 'An Error Occurred' }}</h1>
+    <p class="text-xl text-color-secondary mb-5">{{ error?.message || 'Something went wrong on our end.' }}</p>
     <Button label="Go to Home" icon="pi pi-home" @click="handleClearError" />
   </div>
 </template>
