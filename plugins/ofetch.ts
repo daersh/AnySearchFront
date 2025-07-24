@@ -6,23 +6,28 @@ import { useLoading } from '~/composables/useLoading';
 export default defineNuxtPlugin((nuxtApp) => {
   const token = useCookie('token');
   const { startLoading, stopLoading } = useLoading();
-  const router = useRouter(); // useRouter를 여기서 한 번만 호출
+  const router = useRouter();
 
-  let apiBaseUrl = '/';
+  let apiBaseUrl = '';
 
-  // 'process.client' 대신 'import.meta.client' 사용
-  if (import.meta.client) { // <-- 이 부분을 변경했습니다.
+  if (process.client) {
+    // Client-side: Determine base URL based on current window location
     const currentPort = window.location.port;
-    if (currentPort == '3000') {
+    if (currentPort === '3000') {
       apiBaseUrl = 'http://localhost:8080';
+    } else {
+      apiBaseUrl = window.location.origin; // Use current origin for other ports/production
     }
+  } else if (process.server) {
+    // Server-side: Use environment variable or a default server URL
+    apiBaseUrl = process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8080';
   }
 
   const apiFetch = ofetch.create({
     baseURL: apiBaseUrl,
 
     onRequest({ request, options }) {
-      startLoading(); // 요청 시작 시 로딩 시작
+      startLoading();
       if (token.value) {
         options.headers = {
           ...options.headers,
@@ -32,15 +37,15 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
 
     onResponse({ request, options, response }) {
-      stopLoading(); // 응답 성공 시 로딩 중지
+      stopLoading();
     },
 
     onResponseError({ request, options, response }) {
-      stopLoading(); // 응답 에러 시 로딩 중지
+      stopLoading();
       if (response && response.status === 401) {
         console.warn('Unauthorized (401) response received. Redirecting to auth page.');
         token.value = null;
-        router.push('/auth'); // /login 대신 /auth로 리다이렉트
+        router.push('/auth');
       }
     }
   });

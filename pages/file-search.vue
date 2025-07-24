@@ -67,7 +67,8 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { debounce } from 'lodash';
+import _ from 'lodash';
+const debounce = _.debounce;
 
 const route = useRoute();
 
