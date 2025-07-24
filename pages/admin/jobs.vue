@@ -1,28 +1,31 @@
 <template>
-  <div class="surface-ground flex align-items-center justify-content-center min-h-screen p-4">
-    <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6 md:w-8">
-      <div class="text-center mb-5">
-        <i class="pi pi-server text-blue-500 text-4xl mb-3"></i>
-        <div class="text-900 text-3xl font-medium mb-3">Job Management</div>
-        <span class="text-600 font-medium">Trigger batch jobs</span>
-      </div>
+  <div class="p-8">
+    <div class="max-w-2xl mx-auto">
+      <div class="p-card p-5 text-center">
+        <i class="pi pi-server text-primary text-4xl mb-3"></i>
+        <h1 class="text-3xl font-bold mb-3">Job Management</h1>
+        <p class="text-color-secondary mb-5">Trigger and monitor batch jobs.</p>
 
-      <div class="flex justify-content-center">
-        <Button v-if="activeButton" label="Trigger AnyData Batch Job" icon="pi pi-play" class="p-button-primary" @click="triggerAnyDataJob" />
-        <Button v-else label="Check Job Health" icon="pi pi-check" class="p-button-secondary ml-2" @click="checkJobHealth" />
-      </div>
+        <div class="flex justify-content-center gap-3">
+          <Button v-if="activeButton" label="Trigger AnyData Batch Job" icon="pi pi-play" @click="triggerAnyDataJob" />
+          <Button v-else label="Check Job Health" icon="pi pi-heartbeat" class="p-button-secondary" @click="checkJobHealth" />
+        </div>
 
-      <div v-if="message" class="text-center mt-4">
-        <Message severity="info">{{ message }}</Message>
-      </div>
-      <div v-if="error" class="text-red-500 text-center mt-4">
-        <Message severity="error">{{ error }}</Message>
+        <div v-if="message" class="mt-5">
+          <Message severity="info" :closable="false">{{ message }}</Message>
+        </div>
+        <div v-if="error" class="mt-5">
+          <Message severity="error" :closable="false">{{ error }}</Message>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'admin'
+});
 import { ref } from 'vue';
 import Button from 'primevue/button';
 import Message from 'primevue/message';

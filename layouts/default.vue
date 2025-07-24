@@ -3,16 +3,19 @@ import Menubar from 'primevue/menubar';
 import { ref, computed } from 'vue';
 import { useAuth } from '~/composables/useAuth';
 import { useRoute } from 'vue-router';
+import { useTheme } from '~/composables/useTheme';
 
 const { isAdmin, token } = useAuth();
 const router = useRouter();
 const route = useRoute();
+const { isDark, toggleDark } = useTheme();
+
 console.log("isAdmin:", isAdmin);
-const showMenubar = computed(() => route.path !== '/login' && route.path !== '/register');
+const showMenubar = computed(() => route.path !== '/auth');
 
 const logout = () => {
   token.value = null;
-  router.push('/login');
+  router.push('/auth'); // Redirect to auth page after logout
 };
 
 const menuItems = computed(() => {
@@ -26,6 +29,11 @@ const menuItems = computed(() => {
       label: 'Search',
       icon: 'pi pi-search',
       command: () => router.push('/search')
+    },
+    {
+      label: 'Profile',
+      icon: 'pi pi-user',
+      command: () => router.push('/profile')
     },
   ];
 
@@ -43,6 +51,11 @@ const menuItems = computed(() => {
           label: 'Manage AnyData',
           icon: 'pi pi-database',
           command: () => router.push('/admin/anydata')
+        },
+        {
+          label: 'File Upload',
+          icon: 'pi pi-upload',
+          command: () => router.push('/admin/fileupload')
         }
       ]
     }
@@ -62,12 +75,17 @@ const menuItems = computed(() => {
 
 <template>
   <div class="min-h-screen flex flex-column">
-    <Menubar :model="menuItems" class="p-menubar-light shadow-2" v-if="showMenubar" />
+    <Menubar :model="menuItems" class="p-menubar-light shadow-2" v-if="showMenubar">
+      <template #end>
+        <Button :icon="isDark ? 'pi pi-sun' : 'pi pi-moon'" class="p-button-rounded p-button-text" @click="toggleDark" />
+      </template>
+    </Menubar>
     <main class="flex-grow-1">
       <slot />
     </main>
     <Toast />
     <ConfirmDialog />
+    <LoadingSpinner />
   </div>
 </template>
 

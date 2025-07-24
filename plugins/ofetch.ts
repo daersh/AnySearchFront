@@ -1,9 +1,12 @@
 // plugins/apiFetch.ts (또는 .client.ts / .server.ts)
 import { defineNuxtPlugin, useCookie, useRouter } from '#app';
 import { ofetch } from 'ofetch';
+import { useLoading } from '~/composables/useLoading';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const token = useCookie('token');
+  const { startLoading, stopLoading } = useLoading();
+  const router = useRouter(); // useRouter를 여기서 한 번만 호출
 
   let apiBaseUrl = '/';
 
@@ -19,6 +22,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     baseURL: apiBaseUrl,
 
     onRequest({ request, options }) {
+      startLoading(); // 요청 시작 시 로딩 시작
       if (token.value) {
         options.headers = {
           ...options.headers,
@@ -27,12 +31,16 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    onResponse({ request, options, response }) {
+      stopLoading(); // 응답 성공 시 로딩 중지
+    },
+
     onResponseError({ request, options, response }) {
+      stopLoading(); // 응답 에러 시 로딩 중지
       if (response && response.status === 401) {
-        console.warn('Unauthorized (401) response received. Redirecting to login page.');
+        console.warn('Unauthorized (401) response received. Redirecting to auth page.');
         token.value = null;
-        const router = useRouter();
-        router.push('/login');
+        router.push('/auth'); // /login 대신 /auth로 리다이렉트
       }
     }
   });

@@ -1,12 +1,184 @@
 /* assets/main.css */
 
-/* Ensure all text is visible on light backgrounds */
-body {
-  color: var(--text-color, #333333); /* Fallback to a dark gray if --text-color is not defined */
+:root {
+  --primary-color: #4b89ff; /* A brighter blue for dark backgrounds */
+  --primary-color-text: #ffffff;
+  
+  /* Dark Theme Palette */
+  --surface-ground: #121212; /* Very dark grey, almost black */
+  --surface-card: #1e1e1e;   /* Slightly lighter grey for cards/surfaces */
+  --surface-border: #2c2c2c; /* Border color for elements */
+  --text-color: #e0e0e0;     /* Light grey for primary text */
+  --text-color-secondary: #a0a0a0; /* Dimmer grey for secondary text */
+
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --border-radius: 8px; /* Slightly more rounded corners */
 }
 
-/* Override specific PrimeVue component styles if needed */
-/* Example: If a specific component has white text on white background */
-/* .p-component-name .p-element-name {
-  color: var(--text-color, #333333) !important;
-} */
+/* Global Resets and Base Styles */
+html {
+  box-sizing: border-box;
+  font-size: 16px; /* Base font size */
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--surface-ground);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6; /* Improved readability */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+  color: var(--primary-color-text);
+}
+
+/* Card Styling */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* PrimeVue component overrides for dark theme */
+
+.p-menubar {
+  background: var(--surface-card);
+  border-radius: 0;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.p-button {
+    background: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.p-button:enabled:hover {
+    background: #6fa1ff;
+    border-color: #6fa1ff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    background: #2a2a2a; /* Slightly darker than card for header */
+    color: var(--text-color);
+    border: 1px solid var(--surface-border);
+    border-width: 0 0 1px 0;
+    font-weight: 600;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+    background: var(--surface-card);
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+    border: 1px solid var(--surface-border);
+    border-width: 0 0 1px 0;
+}
+
+.p-datatable .p-datatable-tbody > tr:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Input fields styling */
+.p-inputtext, .p-password, .p-dropdown, .p-inputtextarea {
+    background: #2a2a2a;
+    color: var(--text-color);
+    border: 1px solid var(--surface-border);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.p-inputtext:focus, .p-password:focus, .p-dropdown:focus, .p-inputtextarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+    outline: none;
+}
+
+/* General form field styling */
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.p-float-label label {
+  color: var(--text-color-secondary);
+}
+
+.p-float-label .p-focus ~ label {
+  color: var(--primary-color);
+}
+
+/* Utility classes (can be expanded) */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.text-5xl {
+  font-size: 3rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.text-color-secondary {
+  color: var(--text-color-secondary);
+}
+
+.p-fluid .field {
+  width: 100%;
+}
+
+.p-fluid .p-float-label {
+  width: 100%;
+}
+
+.p-fluid .p-inputtext, .p-fluid .p-password, .p-fluid .p-dropdown, .p-fluid .p-inputtextarea {
+  width: 100%;
+}
