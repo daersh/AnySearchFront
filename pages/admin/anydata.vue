@@ -33,15 +33,69 @@
     </div>
 
     <Dialog v-model:visible="showAddDialog" header="Add New AnyData" :modal="true" class="p-fluid w-full md:w-1/2">
-      <!-- Add/Edit Form Fields -->
+      <div class="field">
+          <label for="type">Type</label>
+          <InputText id="type" v-model="newAnyData.type" required autofocus />
+        </div>
+        <div class="field">
+          <label for="title">Title</label>
+          <InputText id="title" v-model="newAnyData.title" required />
+        </div>
+        <div class="field">
+          <label for="description">Description</label><br>
+          <InputTextarea id="description" v-model="newAnyData.description" rows="3" cols="120" />
+        </div>
+        <div class="field">
+          <label for="addInfo">Additional Info (e.g., price†tag)</label>
+          <InputText id="addInfo" v-model="newAnyData.addInfo" />
+        </div>
+        <div class="field">
+          <label for="addDetail">Additional Detail (e.g., 1000†new)</label>
+          <InputText id="addDetail" v-model="newAnyData.addDetail" />
+        </div>
+        <div class="field-checkbox">
+          <Checkbox id="isActive" v-model="newAnyData.isActive" :binary="true" />
+          <label for="isActive">Is Active</label>
+        </div>
+        <template #footer>
+          <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showAddDialog = false" />
+          <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveAnyData" />
+        </template>
     </Dialog>
 
-    <Dialog v-model:visible="showEditDialog" header="Edit AnyData" :modal="true" class="p-fluid w-full md:w-1/2">
-      <!-- Add/Edit Form Fields -->
-    </Dialog>
-
-    <ConfirmDialog />
-    <Toast />
+    <Dialog v-model:visible="showEditDialog" header="Edit AnyData" :modal="true" class="p-fluid">
+        <div class="field">
+          <label for="editType">Type</label>
+          <InputText id="editType" v-model="editingAnyData.type" required autofocus />
+        </div>
+        <div class="field">
+          <label for="editTitle">Title</label>
+          <InputText id="editTitle" v-model="editingAnyData.title" required />
+        </div>
+        <div class="field">
+          <label for="editDescription">Description</label>
+          <InputTextarea id="editDescription" v-model="editingAnyData.description" rows="3" cols="20" />
+        </div>
+        <div class="field">
+          <label for="editAddInfo">Additional Info (e.g., price†tag)</label>
+          <InputText id="editAddInfo" v-model="editingAnyData.addInfo" />
+        </div>
+        <div class="field">
+          <label for="editAddDetail">Additional Detail (e.g., 1000†new)</label>
+          <InputText id="editAddDetail" v-model="editingAnyData.addDetail" />
+        </div>
+        <div class="field-checkbox">
+          <Checkbox id="editIsActive" v-model="editingAnyData.isActive" :binary="true" />
+          <label for="editIsActive">Is Active</label>
+        </div>
+        <template #footer>
+          <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showEditDialog = false" />
+          <Button label="Update" icon="pi pi-check" class="p-button-text" @click="updateAnyData" />
+        </template>
+      </Dialog>
+      
+      <ConfirmDialog></ConfirmDialog>
+      <Toast />
   </div>
 </template>
 

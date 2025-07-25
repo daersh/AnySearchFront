@@ -35,7 +35,7 @@
         </Card>
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4">
+      <div class="col-12 md:col-6 lg:col-4" v-if="isAdmin()">
         <Card class="dashboard-card" @click="navigateTo('/admin/fileupload')">
           <template #title>
             <i class="pi pi-upload text-primary text-3xl mb-3"></i>
@@ -47,7 +47,7 @@
         </Card>
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4">
+      <div class="col-12 md:col-6 lg:col-4" v-if="isAdmin()">
         <Card class="dashboard-card" @click="navigateTo('/admin/jobs')">
           <template #title>
             <i class="pi pi-server text-primary text-3xl mb-3"></i>
@@ -59,7 +59,7 @@
         </Card>
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4">
+      <div class="col-12 md:col-6 lg:col-4" v-if="isAdmin()">
         <Card class="dashboard-card" @click="navigateTo('/admin/anydata')">
           <template #title>
             <i class="pi pi-database text-primary text-3xl mb-3"></i>
@@ -98,7 +98,7 @@ import { useAuth } from '~/composables/useAuth';
 
 const router = useRouter();
 const searchQuery = ref('');
-const { isAdmin } = useAuth();
+const { isAdmin, token } = useAuth();
 
 const performSearch = () => {
   if (searchQuery.value.trim()) {
