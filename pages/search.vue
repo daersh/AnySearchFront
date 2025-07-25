@@ -52,7 +52,10 @@
                 </div>
               </div>
               <div class="text-sm">
-                <strong>Uploaded on:</strong> {{ result.date }}
+                <strong>생성일:</strong> {{ result.createdDate }}
+              </div>
+              <div class="text-sm">
+                <strong>수정일:</strong> {{ result.updateDate }}
               </div>
             </div>
           </div>
@@ -214,8 +217,8 @@ const search = async () => {
         additionalFields: item.additionalFields,
         type: item.type,
         //"2025-07-24T05:15:28.313027700Z"
-        date: item.uploadedAt ? item.uploadedAt : '',
-        showFullDescription: false // Add this property
+        createdDate: item.createdAt ? item.createdAt : 'Unknown',
+        updateDate: item.updatedAt ? item.updatedAt : 'Unknown',
       });
     }
     error.value = null;
