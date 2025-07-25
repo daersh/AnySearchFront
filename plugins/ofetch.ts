@@ -16,11 +16,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     if (currentPort === '3000') {
       apiBaseUrl = 'http://localhost:8080';
     } else {
-      apiBaseUrl = window.location.origin; // Use current origin for other ports/production
+      apiBaseUrl = window.location.origin; 
     }
   } else if (process.server) {
     // Server-side: Use environment variable or a default server URL
-    apiBaseUrl = process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8080';
+    apiBaseUrl = process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
   }
 
   const apiFetch = ofetch.create({
