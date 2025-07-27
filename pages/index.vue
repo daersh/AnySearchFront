@@ -83,6 +83,18 @@
         </Card>
       </div>
 
+      <div class="col-12 md:col-6 lg:col-4">
+        <Card class="dashboard-card" @click="navigateTo('/naver-search')">
+          <template #title>
+            <i class="pi pi-file text-primary text-3xl mb-3"></i>
+            <h3>Naver Search</h3>
+          </template>
+          <template #content>
+            <p class="text-color-secondary">Search specifically for files and documents.</p>
+          </template>
+        </Card>
+      </div>
+
       <!-- Add more cards for other features as needed -->
     </div>
   </div>
