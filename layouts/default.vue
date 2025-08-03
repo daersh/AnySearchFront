@@ -23,20 +23,31 @@ const menuItems = computed(() => {
       command: () => router.push('/')
     },
     {
-      label: 'Search',
-      icon: 'pi pi-search',
-      command: () => router.push('/search')
-    },
-    {
-      label: 'File Search',
-      icon: 'pi pi-file',
-      command: () => router.push('/file-search')
-    },
-    {
       label: 'Profile',
       icon: 'pi pi-user',
       command: () => router.push('/profile')
     },
+    {
+      label: 'Search',
+      icon: 'pi pi-search',
+      items: [
+        {
+          label: 'Search AnyData',
+          icon: 'pi pi-at',
+          command: () => router.push('/search')
+        },
+        {
+          label: 'Search File',
+          icon: 'pi pi-link',
+          command: () => router.push('/file-search')
+        },
+        {
+          label: 'Search Naver',
+          icon: 'pi pi-mobile',
+          command: () => router.push('/naver-search')
+        }
+      ]
+    }
   ];
 
   const adminItems = isAdmin() ? [
