@@ -189,7 +189,7 @@ const search = async () => {
     isEnd.value = response.count <= (currentPage.value + 1) * 3;
     console.log(response.docs);
     for (const item of response.docs) {
-     
+      console.log("item: ", item);
       results.value.push({
         id: item.id,
         title: item.title== null ? item.filename : item.title,
@@ -197,8 +197,8 @@ const search = async () => {
         additionalFields: item.additionalFields,
         type: item.type,
         //"2025-07-24T05:15:28.313027700Z"
-        createdDate: item.createdAt ? item.createdAt : 'Unknown',
-        updateDate: item.updatedAt ? item.updatedAt : 'Unknown',
+        createdAt: item.createdAt ,
+        updatedAt: item.updatedAt
       });
     }
     console.log("datas: ", results);
