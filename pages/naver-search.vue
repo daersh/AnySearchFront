@@ -196,7 +196,7 @@ const search = async () => {
     });
     results.value = [];
     totalCount.value = response.count;
-    isEnd.value = response.count <= (currentPage.value + 1) * 3;
+    isEnd.value = response.count <= (currentPage.value + 1) * 20;
     console.log(response.docs);
     for (const item of response.docs) {
       console.log("item: ", item);
