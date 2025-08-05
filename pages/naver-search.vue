@@ -29,33 +29,37 @@
         <div class="mb-4 text-sm text-color-secondary">
           Showing {{ results.length }} of {{ totalCount }} results.
         </div>
-        <div class="grid">
-    <div v-for="result in results" :key="result.id" class="col-12">
-      <div class="p-card p-4">
-        <div class="text-xl font-semibold mb-2">{{ result.title }}</div>
-        <p class="text-color-secondary mb-3">
-          {{ result.description }}
-        </p>
-
-        <div v-if="result.additionalFields && result.additionalFields.image" class="mb-3">
-          <img :src="result.additionalFields.image" :alt="result.title + ' 추가 이미지'" style="max-width: 150px; height: auto; display: block; margin-bottom: 10px;">
-        </div>
-        
-        <div v-if="result.additionalFields" class="text-sm">
-          <div v-for="(value, key) in result.additionalFields" :key="key">
-            <strong v-if="key !== 'image'">{{ key }}:</strong> 
-            <span v-if="key !== 'image'">{{ value }}</span>
+        <div class="grid-container">
+          <div v-for="result in results" :key="result.id" class="col-custom">
+            <div class="search-result-card cursor-pointer" @click="openLink(result)">
+              <div class="visible-part">
+                <img v-if="result.additionalFields && result.additionalFields.image" :src="result.additionalFields.image" :alt="result.title + ' image'" class="card-img-top">
+                <div v-else class="image-placeholder">
+                  <span>No Image</span>
+                </div>
+                <div class="title-container">
+                  <p class="card-title">{{ result.title }}</p>
+                </div>
+              </div>
+              <div class="hidden-part">
+                <h6 class="hidden-title">{{ result.title }}</h6>
+                <p class="card-description">{{ result.description }}</p>
+                <div class="additional-info">
+                  <div v-if="result.additionalFields" class="text-sm">
+                    <div v-for="(value, key) in result.additionalFields" :key="key">
+                      <template v-if="key !== 'image' && key !== 'link'">
+                        <strong>{{ key }}:</strong> 
+                        <span>{{ value }}</span>
+                      </template>
+                    </div>
+                  </div>
+                  <div><strong>생성일:</strong> {{ result.createdAt }}</div>
+                  <div><strong>수정일:</strong> {{ result.updatedAt }}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="text-sm">
-          <strong>생성일:</strong> {{ result.createdAt }}
-        </div>
-        <div class="text-sm">
-          <strong>수정일:</strong> {{ result.updatedAt }}
-        </div>
-      </div>
-    </div>
-  </div>
 
 
         <div class="flex justify-content-between align-items-center mt-5">
@@ -173,6 +177,12 @@ const clearSearchQuery = () => {
   debouncedFetchSuggestions.cancel();
 };
 
+const openLink = (result) => {
+  if (result.additionalFields && result.additionalFields.link) {
+    window.open(result.additionalFields.link, '_blank');
+  }
+};
+
 const search = async () => {
   try {
     const { $apiFetch } = useNuxtApp();
@@ -181,7 +191,7 @@ const search = async () => {
         request: searchQuery.value,
         type: "anydata_naver",
         page: currentPage.value,
-        size: 3,
+        size: 20,
       },
     });
     results.value = [];
@@ -250,5 +260,118 @@ search();
 
 .p-inputgroup {
   position: relative;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Adjusted minmax */
+  gap: 2rem; /* Increased gap */
+  padding: 1rem; /* Added padding to contain scaled cards */
+}
+
+.col-custom {
+  display: flex;
+  justify-content: center;
+}
+
+.search-result-card {
+  width: 240px; /* Increased width */
+  height: 320px; /* Increased height */
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--surface-card);
+}
+
+.search-result-card:hover {
+  transform: scale(1.1); /* Zoom in on hover */
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  z-index: 10; /* Bring the card to the front */
+}
+
+.visible-part {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #2a2a2a; /* Dark background for the card's visible part */
+}
+
+.card-img-top {
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3a3a3a; /* Darker placeholder background */
+  color: #6c6c6c; /* Adjusted placeholder text color */
+}
+
+.title-container {
+  padding: 1rem;
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #e5e5e5; /* Light text color for the title */
+  margin: 0;
+}
+
+.hidden-part {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-result-card:hover .hidden-part {
+  opacity: 1;
+}
+
+.hidden-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #FFD700; /* Gold color for emphasis */
+}
+
+.card-description {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.additional-info {
+  font-size: 0.8rem;
+  border-top: 1px solid #555;
+  padding-top: 0.5rem;
+}
+
+.additional-info strong {
+  color: #FFD700;
 }
 </style>
